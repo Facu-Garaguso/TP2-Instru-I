@@ -6,7 +6,7 @@
 \newcommand{\materia}{Instrumentación Biomédica I}
 \newcommand{\institucion}{Instituto Tecnológico de Buenos Aires}
 \newcommand{\numeroTP}{2}
-\newcommand{\nombreTP}{NOMBRE DEL TP}
+\newcommand{\nombreTP}{Sensor de Temperatura}
 \newcommand{\anioTP}{2026}
 
 % =============================================================================
@@ -59,8 +59,8 @@
 \pagestyle{fancy}
 \fancyhf{}
 \setlength{\headheight}{28pt}
-\fancyhead[L]{\materia{} - ITBA - \anioTP}
-\fancyhead[R]{TP \numeroTP}
+\fancyhead[L]{Instrumentación Biomédica I - ITBA}
+\fancyhead[R]{TP 2}
 \fancyfoot[C]{\thepage}
 
 \begin{document}
@@ -79,30 +79,36 @@
 
 \begin{multicols}{2}
 
-{\raggedright
-\large
-\emph{Profesores:} Hernán \textsc{Soares}\\
-\hspace*{2.75cm} Sofia \textsc{Cerretini}\\
-}
+% Profesores
+\begin{flushleft}
+    \large
+    \textbf{Profesores:}\\
+    Hernán \textsc{Soares}\\
+    Sofía \textsc{Cerretini}
+\end{flushleft}
 
 \columnbreak
 
-{\raggedright
-\large
-\emph{Alumnos/as:} Facundo \textsc{Garaguso}\\
-% Agregar debajo los demás integrantes del grupo:
-% \hspace*{2.75cm} Nombre \textsc{Apellido}\\
-% \hspace*{2.75cm} Nombre \textsc{Apellido}\\
-}
+% Integrantes
+\begin{flushleft}
+    \large
+    \textbf{Alumnos/as:}\\
+    Joaquín \textsc{Basualdo} -- 65658\\
+    Bautista \textsc{Estrada} -- 65583\\
+    Facundo \textsc{Garaguso Fernandez} -- 65436\\
+    Augusto \textsc{Frate} -- 65013
+\end{flushleft}
 
 \end{multicols}
 
 \vspace{0.5cm}
 
 \renewcommand{\arraystretch}{1.6}
+
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{|p{6cm}|p{7cm}|}
 \hline
+\textbf{Criterio} & \textbf{Calificación} \\ \hline
 Presentación & \\ \hline
 Desarrollo & \\ \hline
 Conclusiones & \\ \hline
@@ -113,7 +119,7 @@ Firma y Fecha & \\ \hline
 
 \end{center}
 
-\thispagestyle{empty}
+\thispagestyle{fancy}
 
 % =============================================================================
 % ÍNDICE
@@ -121,6 +127,7 @@ Firma y Fecha & \\ \hline
 \newpage
 \tableofcontents
 \thispagestyle{fancy}
+
 \newpage
 
 % =============================================================================
@@ -144,6 +151,7 @@ Firma y Fecha & \\ \hline
 % Todo resultado debe estar acompañado por su justificación teórica.
 %
 % Ejemplo para insertar una figura desde la carpeta imagenes/:
+%
 % \begin{figure}[H]
 %     \centering
 %     \includegraphics[width=0.75\textwidth]{nombre_imagen.png}
@@ -151,13 +159,20 @@ Firma y Fecha & \\ \hline
 %     \label{fig:ejemplo}
 % \end{figure}
 %
-% Para referenciarla en el texto: Figura~\ref{fig:ejemplo}.
+% Para referenciarla en el texto:
+% Figura~\ref{fig:ejemplo}.
 
 \section{Resultados}
 
 % Presentar mediciones, tablas y gráficos con unidades y notación consistente.
-% En capturas de osciloscopio, indicar escalas por división y qué señal
-% corresponde a cada canal.
+%
+% En capturas de osciloscopio, indicar:
+% - escalas por división;
+% - qué señal corresponde a cada canal;
+% - unidades utilizadas.
+%
+% En caso de comparar diagramas de Bode, utilizar los mismos ejes
+% cuando corresponda.
 
 \section{Conclusiones}
 
@@ -171,6 +186,7 @@ Firma y Fecha & \\ \hline
 % =============================================================================
 %
 % \newpage
+%
 % \begin{thebibliography}{9}
 %
 % \bibitem{ejemplo}
@@ -188,8 +204,11 @@ Firma y Fecha & \\ \hline
 %
 % \newpage
 % \appendix
+%
 % \section{Anexo}
-% Incluir aquí cálculos extensos, tablas adicionales, capturas complementarias,
-% código u otro material de apoyo que no sea indispensable en el cuerpo.
+%
+% Incluir aquí cálculos extensos, tablas adicionales,
+% capturas complementarias, código u otro material de apoyo
+% que no sea indispensable en el cuerpo principal.
 
 \end{document}
