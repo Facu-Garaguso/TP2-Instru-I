@@ -1,0 +1,22 @@
+# Archivos auxiliares generados por LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Archivos temporales del editor/sistema
+*.tmp
+*.bak
+*~
+.DS_Store
+Thumbs.db
+
+# PDF generado localmente
+main.pdf
