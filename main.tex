@@ -1,16 +1,34 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[10pt]{article}
 
-% Codificacion e idioma
+% =============================================================================
+% DATOS GENERALES DEL TRABAJO
+% =============================================================================
+\newcommand{\materia}{Instrumentación Biomédica I}
+\newcommand{\institucion}{Instituto Tecnológico de Buenos Aires}
+\newcommand{\numeroTP}{2}
+\newcommand{\nombreTP}{NOMBRE DEL TP}
+\newcommand{\anioTP}{2026}
+
+% =============================================================================
+% FORMATO EXIGIDO POR LA CÁTEDRA
+% =============================================================================
+\textheight=21cm
+\textwidth=15cm
+\topmargin=-0.5cm
+\oddsidemargin=1cm
+\evensidemargin=1cm
+\parindent=0mm
+
+% =============================================================================
+% PAQUETES
+% =============================================================================
+
+% Codificación e idioma
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-tabla]{babel}
 
-% Margenes y formato
-\usepackage[a4paper,margin=2.5cm]{geometry}
-\usepackage{setspace}
-\onehalfspacing
-
-% Matematica y unidades
+% Matemática y unidades
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \sisetup{output-decimal-marker={,}}
@@ -18,42 +36,160 @@
 % Figuras y tablas
 \usepackage{graphicx}
 \graphicspath{{imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg}
 \usepackage{float}
+\usepackage{subcaption}
 \usepackage{booktabs}
-\usepackage{caption}
+\usepackage{array}
+\usepackage{adjustbox}
+
+% Formato de página
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{xcolor}
 
 % Enlaces y referencias
 \usepackage[hidelinks]{hyperref}
 
-% Datos del trabajo
-\title{Trabajo Práctico 2\\Instrumentación I}
-\author{Facundo Garaguso}
-\date{2026}
+% =============================================================================
+% CONFIGURACIÓN GENERAL
+% =============================================================================
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{28pt}
+\fancyhead[L]{\materia{} - ITBA - \anioTP}
+\fancyhead[R]{TP \numeroTP}
+\fancyfoot[C]{\thepage}
 
 \begin{document}
 
-\maketitle
-\tableofcontents
+% =============================================================================
+% CARÁTULA
+% =============================================================================
+\begin{center}
+
+\textsc{\LARGE \materia}\\[0.2cm]
+\textsc{\Large \institucion}\\[0.2cm]
+
+\HRule \\[0.2cm]
+{\huge\bfseries TP \numeroTP{} - \nombreTP \\[0.2cm]}
+\HRule \\[1cm]
+
+\begin{multicols}{2}
+
+{\raggedright
+\large
+\emph{Profesores:} Hernán \textsc{Soares}\\
+\hspace*{2.75cm} Sofia \textsc{Cerretini}\\
+}
+
+\columnbreak
+
+{\raggedright
+\large
+\emph{Alumnos/as:} Facundo \textsc{Garaguso}\\
+% Agregar debajo los demás integrantes del grupo:
+% \hspace*{2.75cm} Nombre \textsc{Apellido}\\
+% \hspace*{2.75cm} Nombre \textsc{Apellido}\\
+}
+
+\end{multicols}
+
+\vspace{0.5cm}
+
+\renewcommand{\arraystretch}{1.6}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{|p{6cm}|p{7cm}|}
+\hline
+Presentación & \\ \hline
+Desarrollo & \\ \hline
+Conclusiones & \\ \hline
+Nota Final & \\ \hline\hline
+Firma y Fecha & \\ \hline
+\end{tabular}
+\end{adjustbox}
+
+\end{center}
+
+\thispagestyle{empty}
+
+% =============================================================================
+% ÍNDICE
+% =============================================================================
 \newpage
+\tableofcontents
+\thispagestyle{fancy}
+\newpage
+
+% =============================================================================
+% INFORME
+% El cuerpo principal debe ocupar entre 2 y 4 carillas, sin contar carátula,
+% índice, anexo ni bibliografía.
+% =============================================================================
 
 \section{Introducción}
 
-% Escribir aquí la introducción del trabajo.
+% Presentar brevemente el problema, el contexto del TP y los conceptos
+% fundamentales necesarios para comprender el desarrollo.
 
 \section{Objetivos}
 
-% Escribir aquí los objetivos.
+% Indicar de forma concreta qué se busca analizar, medir, verificar o diseñar.
 
 \section{Desarrollo}
 
-% Incorporar aquí el desarrollo teórico y experimental.
+% Describir el procedimiento, desarrollo teórico y análisis experimental.
+% Todo resultado debe estar acompañado por su justificación teórica.
+%
+% Ejemplo para insertar una figura desde la carpeta imagenes/:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\textwidth]{nombre_imagen.png}
+%     \caption{Descripción de la figura.}
+%     \label{fig:ejemplo}
+% \end{figure}
+%
+% Para referenciarla en el texto: Figura~\ref{fig:ejemplo}.
 
 \section{Resultados}
 
-% Incorporar aquí resultados, mediciones, tablas y gráficos.
+% Presentar mediciones, tablas y gráficos con unidades y notación consistente.
+% En capturas de osciloscopio, indicar escalas por división y qué señal
+% corresponde a cada canal.
 
 \section{Conclusiones}
 
-% Escribir aquí las conclusiones.
+% Sintetizar los resultados principales, contrastarlos con la teoría y,
+% cuando corresponda, relacionarlos con aplicaciones en bioingeniería.
+
+% =============================================================================
+% BIBLIOGRAFÍA
+% No se contabiliza dentro de las 2--4 carillas del cuerpo principal.
+% Descomentar y completar cuando se incorporen fuentes externas.
+% =============================================================================
+%
+% \newpage
+% \begin{thebibliography}{9}
+%
+% \bibitem{ejemplo}
+% Autor o institución,
+% \emph{Título del recurso},
+% \url{https://ejemplo.com},
+% consultado en 2026.
+%
+% \end{thebibliography}
+
+% =============================================================================
+% ANEXO
+% No se contabiliza dentro de las 2--4 carillas del cuerpo principal.
+% =============================================================================
+%
+% \newpage
+% \appendix
+% \section{Anexo}
+% Incluir aquí cálculos extensos, tablas adicionales, capturas complementarias,
+% código u otro material de apoyo que no sea indispensable en el cuerpo.
 
 \end{document}
