@@ -1,0 +1,12 @@
+# Este proyecto no requiere dependencias de Python.
+#
+# Dependencias del sistema necesarias para compilar el informe LaTeX:
+# - TeX Live 2026 o superior
+# - latexmk
+#
+# Extensión recomendada para Visual Studio Code:
+# - LaTeX Workshop (James Yu)
+#
+# Verificación desde terminal:
+# pdflatex --version
+# latexmk --version
