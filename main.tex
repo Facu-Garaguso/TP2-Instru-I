@@ -1,16 +1,34 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[10pt]{article}
 
-% Codificacion e idioma
+% =============================================================================
+% DATOS GENERALES DEL TRABAJO
+% =============================================================================
+\newcommand{\materia}{Instrumentación Biomédica I}
+\newcommand{\institucion}{Instituto Tecnológico de Buenos Aires}
+\newcommand{\numeroTP}{2}
+\newcommand{\nombreTP}{Sensor de Temperatura}
+\newcommand{\anioTP}{2026}
+
+% =============================================================================
+% FORMATO EXIGIDO POR LA CÁTEDRA
+% =============================================================================
+\textheight=21cm
+\textwidth=15cm
+\topmargin=-0.5cm
+\oddsidemargin=1cm
+\evensidemargin=1cm
+\parindent=0mm
+
+% =============================================================================
+% PAQUETES
+% =============================================================================
+
+% Codificación e idioma
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-tabla]{babel}
 
-% Margenes y formato
-\usepackage[a4paper,margin=2.5cm]{geometry}
-\usepackage{setspace}
-\onehalfspacing
-
-% Matematica y unidades
+% Matemática y unidades
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \sisetup{output-decimal-marker={,}}
@@ -18,42 +36,260 @@
 % Figuras y tablas
 \usepackage{graphicx}
 \graphicspath{{imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg}
 \usepackage{float}
+\usepackage{subcaption}
 \usepackage{booktabs}
-\usepackage{caption}
+\usepackage{array}
+\usepackage{adjustbox}
+
+% Formato de página
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{xcolor}
 
 % Enlaces y referencias
 \usepackage[hidelinks]{hyperref}
 
-% Datos del trabajo
-\title{Trabajo Práctico 2\\Instrumentación I}
-\author{Facundo Garaguso}
-\date{2026}
+% =============================================================================
+% CONFIGURACIÓN GENERAL
+% =============================================================================
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{28pt}
+\fancyhead[L]{Instrumentación Biomédica I - ITBA}
+\fancyhead[R]{TP 2}
+\fancyfoot[C]{\thepage}
 
 \begin{document}
 
-\maketitle
+% =============================================================================
+% CARÁTULA
+% =============================================================================
+\begin{center}
+
+\textsc{\LARGE \materia}\\[0.2cm]
+\textsc{\Large \institucion}\\[0.2cm]
+
+\HRule \\[0.2cm]
+{\huge\bfseries TP \numeroTP{} - \nombreTP \\[0.2cm]}
+\HRule \\[1cm]
+
+\begin{multicols}{2}
+
+% Profesores
+\begin{flushleft}
+    \large
+    \textbf{Profesores:}\\
+    Hernán \textsc{Soares}\\
+    Sofía \textsc{Cerretini}
+\end{flushleft}
+
+\columnbreak
+
+% Integrantes
+\begin{flushleft}
+    \large
+    \textbf{Alumnos/as:}\\
+    Joaquín \textsc{Basualdo} -- 65658\\
+    Bautista \textsc{Estrada} -- 65583\\
+    Facundo \textsc{Garaguso Fernandez} -- 65436\\
+    Augusto \textsc{Frate} -- 65013
+\end{flushleft}
+
+\end{multicols}
+
+\vspace{0.5cm}
+
+\renewcommand{\arraystretch}{1.6}
+
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{|p{6cm}|p{7cm}|}
+\hline
+\textbf{Criterio} & \textbf{Calificación} \\ \hline
+Presentación & \\ \hline
+Desarrollo & \\ \hline
+Conclusiones & \\ \hline
+Nota Final & \\ \hline\hline
+Firma y Fecha & \\ \hline
+\end{tabular}
+\end{adjustbox}
+
+\end{center}
+
+\thispagestyle{fancy}
+
+% =============================================================================
+% ÍNDICE
+% =============================================================================
+\newpage
 \tableofcontents
+\thispagestyle{fancy}
+
 \newpage
 
-\section{Introducción}
+% =============================================================================
+% INFORME
+% El cuerpo principal debe ocupar entre 2 y 4 carillas, sin contar carátula,
+% índice, anexo ni bibliografía.
+% =============================================================================
 
-% Escribir aquí la introducción del trabajo.
+\section{Objetivo}
 
-\section{Objetivos}
-
-% Escribir aquí los objetivos.
+El objetivo del trabajo es comprender el comportamiento de un sensor NTC de
+\SI{10}{\kilo\ohm} y analizar su utilización para la medición de temperatura.
+Para ello se estudia la relación entre resistencia y temperatura, se simula el
+circuito de medición, se realiza una medicion experimental mediante
+mediciones de resistencia y temperatura con multímetro y termocupla, y se implementa la adquisición mediante Arduino utilizando
+la ecuación de Steinhart--Hart.
 
 \section{Desarrollo}
 
-% Incorporar aquí el desarrollo teórico y experimental.
+\subsection{Simulación del circuito}
+
+Se simuló el circuito con un NTC de \SI{10}{\kilo\ohm} a \SI{25}{\celsius},
+realizando un barrido discreto de temperatura entre \SI{10}{\celsius} y
+\SI{50}{\celsius}. Al aumentar la temperatura disminuye la resistencia del NTC,
+por lo que aumenta la corriente del divisor y, en consecuencia, la tensión
+$V_{in}$. En el rango estudiado, $V_{in}$ aumentó de \SI{1.80}{V} a
+\SI{3.54}{V}, mientras que la corriente varió aproximadamente entre
+\SI{180}{\micro A} y \SI{354}{\micro A}.
+
+El TL072 se configuró como seguidor de tensión, por lo que idealmente
+$V_{out}=V_{in}$. Su elevada impedancia de entrada permite aislar el divisor
+resistivo de la etapa siguiente, mientras que su baja
+impedancia de salida permite entregar una mayor corriente a la carga manteniendo
+prácticamente la misma tensión de entrada.
+
+Debido a que el barrido de temperatura se realizó de manera discreta, cada
+simulación corresponde a una temperatura constante y las señales observadas son
+continuas, con frecuencia \SI{0}{Hz}. Si la temperatura variara gradualmente en
+el tiempo, la tensión de entrada también lo haría lentamente, presentando un
+contenido predominantemente de baja frecuencia.
+
+La excursión obtenida fue de \SI{1.737}{V} para la entrada y de
+\SI{1.597}{V} para la salida. El seguidor reproduce prácticamente la entrada
+hasta aproximadamente \SI{40}{\celsius}, mientras que para temperaturas mayores
+comienza a observarse una limitación de la salida. Esto se relaciona con la
+alimentación utilizada de \SI{5}{V}: el TL072 clásico posee un rango de
+alimentación total especificado de aproximadamente \SI{10}{V} a \SI{30}{V} y
+gran parte de sus características son especificadas por el fabricante con
+alimentación de $\pm\SI{15}{V}$, por lo que la condición utilizada se encuentra
+fuera de su rango nominal de operación.
+
+% Describir el procedimiento, desarrollo teórico y análisis experimental.
+% Todo resultado debe estar acompañado por su justificación teórica.
+%
+% Ejemplo para insertar una figura desde la carpeta imagenes/:
+%
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\textwidth]{nombre_imagen.png}
+%     \caption{Descripción de la figura.}
+%     \label{fig:ejemplo}
+% \end{figure}
+%
+% Para referenciarla en el texto:
+% Figura~\ref{fig:ejemplo}.
 
 \section{Resultados}
 
-% Incorporar aquí resultados, mediciones, tablas y gráficos.
+% Presentar mediciones, tablas y gráficos con unidades y notación consistente.
+%
+% En capturas de osciloscopio, indicar:
+% - escalas por división;
+% - qué señal corresponde a cada canal;
+% - unidades utilizadas.
+%
+% En caso de comparar diagramas de Bode, utilizar los mismos ejes
+% cuando corresponda.
 
 \section{Conclusiones}
 
-% Escribir aquí las conclusiones.
+% Sintetizar los resultados principales, contrastarlos con la teoría y,
+% cuando corresponda, relacionarlos con aplicaciones en bioingeniería.
+
+% =============================================================================
+% BIBLIOGRAFÍA
+% No se contabiliza dentro de las 2--4 carillas del cuerpo principal.
+% Descomentar y completar cuando se incorporen fuentes externas.
+% =============================================================================
+%
+
+\begin{thebibliography}{9}
+
+\bibitem{tl072}
+Texas Instruments,
+\emph{TL07xx Low-Noise, FET-Input Operational Amplifiers Datasheet},
+Rev. W, 2025.
+\url{https://www.ti.com/lit/ds/symlink/tl072.pdf}
+
+\end{thebibliography}
+
+% =============================================================================
+% ANEXO
+% No se contabiliza dentro de las 2--4 carillas del cuerpo principal.
+% =============================================================================
+%
+
+\newpage
+\appendix
+\section{Anexo}
+
+\subsection{Simulación del circuito}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Circuito.png}
+    \caption{Circuito simulado en LTspice.}
+    \label{fig:circuito_sim}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Vin.png}
+        \caption{Tensión de entrada $V_{in}$.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Vout.png}
+        \caption{Tensión de salida $V_{out}$.}
+    \end{subfigure}
+    \caption{Tensiones obtenidas para el barrido discreto de temperatura.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{I_Sensor.png}
+    \caption{Corriente por el divisor para distintas temperaturas.}
+    \label{fig:corriente_sensor}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Comparación entre la tensión de entrada y salida del seguidor.}
+    \begin{tabular}{cccc}
+        \toprule
+        $T$ [\si{\celsius}] & $V_{in}$ [V] & $V_{out}$ [V] &
+        $V_{in}-V_{out}$ [V] \\
+        \midrule
+        10 & 1.7996 & 1.7997 & -0.0001 \\
+        15 & 2.0355 & 2.0355 &  0.0000 \\
+        20 & 2.2767 & 2.2767 &  0.0000 \\
+        25 & 2.5112 & 2.5112 &  0.0000 \\
+        30 & 2.7408 & 2.7408 &  0.0000 \\
+        35 & 2.9627 & 2.9627 &  0.0000 \\
+        40 & 3.1667 & 3.1666 &  0.0001 \\
+        45 & 3.3610 & 3.3455 &  0.0155 \\
+        50 & 3.5369 & 3.3965 &  0.1404 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:vin_vout}
+\end{table}
 
 \end{document}
