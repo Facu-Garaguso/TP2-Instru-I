@@ -147,6 +147,34 @@ la ecuación de Steinhart--Hart.
 
 \section{Desarrollo}
 
+\subsection{Caracterización experimental del termistor}
+
+Para caracterizar experimentalmente el termistor se midieron tres condiciones de
+temperatura: ambiente, agua con hielo y agua caliente. En cada caso, la temperatura
+se determinó mediante la termocupla conectada al multímetro, colocando simultáneamente
+el termistor en el mismo medio. Una vez estabilizada la medición de temperatura, se
+midió la resistencia del termistor con el multímetro.
+
+De esta forma se obtuvieron tres pares resistencia--temperatura, correspondientes a
+\SI{20}{\celsius} y \SI{8.12}{\kilo\ohm} para temperatura ambiente,
+\SI{1}{\celsius} y \SI{17}{\kilo\ohm} para agua con hielo, y
+\SI{78}{\celsius} y \SI{6.2}{\kilo\ohm} para agua caliente. Los resultados se
+presentan en la Tabla~\ref{tab:mediciones_ntc} del Anexo.
+
+\subsection{Medición mediante Arduino con parámetros nominales}
+
+Luego se implementó la medición digital conectando el termistor en serie con una
+resistencia de \SI{10}{\kilo\ohm} y llevando la tensión del punto medio del divisor
+a una entrada analógica del Arduino, según el circuito mostrado en la
+Figura~\ref{fig:circuito_arduino}. Mediante su conversor analógico--digital (ADC),
+la tensión medida fue procesada por software para obtener la resistencia del
+termistor y estimar su temperatura.
+
+Inicialmente se utilizaron los parámetros nominales indicados en la hoja de datos
+del sensor. Se repitieron las tres condiciones anteriores: temperatura ambiente,
+agua con hielo y agua caliente. Los resultados obtenidos se presentan en la
+Tabla~\ref{tab:mediciones_arduino_nominal} del Anexo.
+
 % Describir el procedimiento, desarrollo teórico y análisis experimental.
 % Todo resultado debe estar acompañado por su justificación teórica.
 %
@@ -161,18 +189,6 @@ la ecuación de Steinhart--Hart.
 %
 % Para referenciarla en el texto:
 % Figura~\ref{fig:ejemplo}.
-
-\section{Resultados}
-
-% Presentar mediciones, tablas y gráficos con unidades y notación consistente.
-%
-% En capturas de osciloscopio, indicar:
-% - escalas por división;
-% - qué señal corresponde a cada canal;
-% - unidades utilizadas.
-%
-% En caso de comparar diagramas de Bode, utilizar los mismos ejes
-% cuando corresponda.
 
 \section{Conclusiones}
 
@@ -199,5 +215,43 @@ la ecuación de Steinhart--Hart.
 \newpage
 \appendix
 \section{Anexo}
+
+\subsection{Mediciones de temperatura y resistencia}
+
+\begin{table}[H]
+    \centering
+    \caption{Mediciones experimentales de temperatura y resistencia del termistor.}
+    \begin{tabular}{|l|c|c|}
+        \hline
+         & \textbf{Temperatura} & \textbf{Resistencia} \\ \hline
+        Ambiente & \SI{20}{\celsius} & \SI{8.12}{\kilo\ohm} \\ \hline
+        Frio & \SI{1}{\celsius} & \SI{17}{\kilo\ohm} \\ \hline
+        Caliente & \SI{78}{\celsius} & \SI{6.2}{\kilo\ohm} \\ \hline
+    \end{tabular}
+    \label{tab:mediciones_ntc}
+\end{table}
+
+\subsection{Resultados de la medición con parámetros nominales}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{CircuitoArduino.png}
+    \caption{Circuito utilizado para la adquisición de la señal del termistor mediante Arduino.}
+    \label{fig:circuito_arduino}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Mediciones obtenidas mediante Arduino utilizando los parámetros
+    nominales del sensor.}
+    \begin{tabular}{|l|c|c|}
+        \hline
+         & \textbf{Temperatura} & \textbf{Resistencia} \\ \hline
+        Ambiente & \SI{21.6}{\celsius} & \SI{12164}{\ohm} \\ \hline
+        Frio & \SI{3.2}{\celsius} & \SI{29203}{\ohm} \\ \hline
+        Caliente & \SI{71}{\celsius} & \SI{1701}{\ohm} \\ \hline
+    \end{tabular}
+    \label{tab:mediciones_arduino_nominal}
+\end{table}
 
 \end{document}
