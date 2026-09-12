@@ -147,37 +147,33 @@ la ecuación de Steinhart--Hart.
 
 \section{Desarrollo}
 
-\subsection{Simulación del circuito}
+\subsection{Caracterización experimental del termistor}
 
-Se simuló el circuito con un NTC de \SI{10}{\kilo\ohm} a \SI{25}{\celsius},
-realizando un barrido discreto de temperatura entre \SI{10}{\celsius} y
-\SI{50}{\celsius}. Al aumentar la temperatura disminuye la resistencia del NTC,
-por lo que aumenta la corriente del divisor y, en consecuencia, la tensión
-$V_{in}$. En el rango estudiado, $V_{in}$ aumentó de \SI{1.80}{V} a
-\SI{3.54}{V}, mientras que la corriente varió aproximadamente entre
-\SI{180}{\micro A} y \SI{354}{\micro A}.
+Para caracterizar experimentalmente el termistor se midieron tres condiciones de
+temperatura: ambiente, agua con hielo y agua caliente. En cada caso, la temperatura
+se determinó mediante la termocupla conectada al multímetro, colocando simultáneamente
+el termistor en el mismo medio. Una vez estabilizada la medición de temperatura, se
+midió la resistencia del termistor con el multímetro.
 
-El TL072 se configuró como seguidor de tensión, por lo que idealmente
-$V_{out}=V_{in}$. Su elevada impedancia de entrada permite aislar el divisor
-resistivo de la etapa siguiente, mientras que su baja
-impedancia de salida permite entregar una mayor corriente a la carga manteniendo
-prácticamente la misma tensión de entrada.
+De esta forma se obtuvieron tres pares resistencia--temperatura, correspondientes a
+\SI{20}{\celsius} y \SI{8.12}{\kilo\ohm} para temperatura ambiente,
+\SI{1}{\celsius} y \SI{17}{\kilo\ohm} para agua con hielo, y
+\SI{78}{\celsius} y \SI{6.2}{\kilo\ohm} para agua caliente. Los resultados se
+presentan en la Tabla~\ref{tab:mediciones_ntc} del Anexo.
 
-Debido a que el barrido de temperatura se realizó de manera discreta, cada
-simulación corresponde a una temperatura constante y las señales observadas son
-continuas, con frecuencia \SI{0}{Hz}. Si la temperatura variara gradualmente en
-el tiempo, la tensión de entrada también lo haría lentamente, presentando un
-contenido predominantemente de baja frecuencia.
+\subsection{Medición mediante Arduino con parámetros nominales}
 
-La excursión obtenida fue de \SI{1.737}{V} para la entrada y de
-\SI{1.597}{V} para la salida. El seguidor reproduce prácticamente la entrada
-hasta aproximadamente \SI{40}{\celsius}, mientras que para temperaturas mayores
-comienza a observarse una limitación de la salida. Esto se relaciona con la
-alimentación utilizada de \SI{5}{V}: el TL072 clásico posee un rango de
-alimentación total especificado de aproximadamente \SI{10}{V} a \SI{30}{V} y
-gran parte de sus características son especificadas por el fabricante con
-alimentación de $\pm\SI{15}{V}$, por lo que la condición utilizada se encuentra
-fuera de su rango nominal de operación.
+Luego se implementó la medición digital conectando el termistor en serie con una
+resistencia de \SI{10}{\kilo\ohm} y llevando la tensión del punto medio del divisor
+a una entrada analógica del Arduino, según el circuito mostrado en la
+Figura~\ref{fig:circuito_arduino}. Mediante su conversor analógico--digital (ADC),
+la tensión medida fue procesada por software para obtener la resistencia del
+termistor y estimar su temperatura.
+
+Inicialmente se utilizaron los parámetros nominales indicados en la hoja de datos
+del sensor. Se repitieron las tres condiciones anteriores: temperatura ambiente,
+agua con hielo y agua caliente. Los resultados obtenidos se presentan en la
+Tabla~\ref{tab:mediciones_arduino_nominal} del Anexo.
 
 % Describir el procedimiento, desarrollo teórico y análisis experimental.
 % Todo resultado debe estar acompañado por su justificación teórica.
@@ -194,20 +190,9 @@ fuera de su rango nominal de operación.
 % Para referenciarla en el texto:
 % Figura~\ref{fig:ejemplo}.
 
-\section{Resultados}
-
-% Presentar mediciones, tablas y gráficos con unidades y notación consistente.
-%
-% En capturas de osciloscopio, indicar:
-% - escalas por división;
-% - qué señal corresponde a cada canal;
-% - unidades utilizadas.
-%
-% En caso de comparar diagramas de Bode, utilizar los mismos ejes
-% cuando corresponda.
-
 \section{Conclusiones}
 
+La caracterización experimental confirmó el comportamiento de coeficiente de temperatura negativo propio del termistor NTC ---resistencia decreciente y no lineal con la temperatura, consistente con el modelo exponencial $R(T) = R_0 \cdot \exp\left[B\left(1/T - 1/T_0\right)\right]$ y con los parámetros nominales de la familia de sensores empleada ($R_{25} = 10\,\mathrm{k}\Omega$, $B_{25/50} \approx 3950\,\mathrm{K}$)---, pero la comparación contra la medición digital con Arduino evidenció un desajuste sistemático que crece con la distancia al punto de calibración del sensor ($T_0 = 25\,^{\circ}\mathrm{C}$): el error fue mínimo en la condición ambiente y máximo en la condición caliente ($\approx 7\,^{\circ}\mathrm{C}$, la más alejada de $T_0$), con discrepancias de resistencia de hasta un $70\%$ respecto de la referencia directa. Estimaciones de orden de magnitud permiten descartar la resolución del ADC y el autocalentamiento del sensor como causas relevantes, ya que ambos efectos resultan uno o dos órdenes de magnitud menores a los errores observados; el origen dominante del desvío debe atribuirse, por lo tanto, al uso de parámetros nominales de hoja de datos ($B$ y coeficientes de Steinhart-Hart genéricos) en lugar de coeficientes ajustados a la curva característica real de la unidad ensayada. Esto tiene una lectura directa desde la instrumentación biomédica: un error de varios grados Celsius es inaceptable para una medición clínica de temperatura corporal, donde se exige típicamente una exactitud de $\pm 0{,}1$-$0{,}2\,^{\circ}\mathrm{C}$, por lo que los parámetros nominales del fabricante solo son válidos como primera aproximación y todo sensor NTC destinado a uso clínico requiere calibración individual ---ajustando los tres coeficientes de Steinhart-Hart con pares resistencia-temperatura medidos sobre la propia unidad, como los relevados en este trabajo--- antes de su puesta en servicio. En conjunto, el ensayo validó el principio de funcionamiento del termistor y la viabilidad de su lectura mediante un divisor resistivo y el ADC del microcontrolador, mostrando que la exactitud final del sistema está gobernada por la calidad de la calibración del modelo resistencia-temperatura y no por la resolución de la etapa de adquisición digital.
 % Sintetizar los resultados principales, contrastarlos con la teoría y,
 % cuando corresponda, relacionarlos con aplicaciones en bioingeniería.
 
@@ -219,12 +204,6 @@ fuera de su rango nominal de operación.
 %
 
 \begin{thebibliography}{9}
-
-\bibitem{tl072}
-Texas Instruments,
-\emph{TL07xx Low-Noise, FET-Input Operational Amplifiers Datasheet},
-Rev. W, 2025.
-\url{https://www.ti.com/lit/ds/symlink/tl072.pdf}
 
 \end{thebibliography}
 
@@ -238,58 +217,42 @@ Rev. W, 2025.
 \appendix
 \section{Anexo}
 
-\subsection{Simulación del circuito}
+\subsection{Mediciones de temperatura y resistencia}
+
+\begin{table}[H]
+    \centering
+    \caption{Mediciones experimentales de temperatura y resistencia del termistor.}
+    \begin{tabular}{|l|c|c|}
+        \hline
+         & \textbf{Temperatura} & \textbf{Resistencia} \\ \hline
+        Ambiente & \SI{20}{\celsius} & \SI{8.12}{\kilo\ohm} \\ \hline
+        Frio & \SI{1}{\celsius} & \SI{17}{\kilo\ohm} \\ \hline
+        Caliente & \SI{78}{\celsius} & \SI{6.2}{\kilo\ohm} \\ \hline
+    \end{tabular}
+    \label{tab:mediciones_ntc}
+\end{table}
+
+\subsection{Resultados de la medición con parámetros nominales}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{Circuito.png}
-    \caption{Circuito simulado en LTspice.}
-    \label{fig:circuito_sim}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Vin.png}
-        \caption{Tensión de entrada $V_{in}$.}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Vout.png}
-        \caption{Tensión de salida $V_{out}$.}
-    \end{subfigure}
-    \caption{Tensiones obtenidas para el barrido discreto de temperatura.}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{I_Sensor.png}
-    \caption{Corriente por el divisor para distintas temperaturas.}
-    \label{fig:corriente_sensor}
+    \includegraphics[width=0.70\textwidth]{CircuitoArduino.png}
+    \caption{Circuito utilizado para la adquisición de la señal del termistor mediante Arduino.}
+    \label{fig:circuito_arduino}
 \end{figure}
 
 \begin{table}[H]
     \centering
-    \caption{Comparación entre la tensión de entrada y salida del seguidor.}
-    \begin{tabular}{cccc}
-        \toprule
-        $T$ [\si{\celsius}] & $V_{in}$ [V] & $V_{out}$ [V] &
-        $V_{in}-V_{out}$ [V] \\
-        \midrule
-        10 & 1.7996 & 1.7997 & -0.0001 \\
-        15 & 2.0355 & 2.0355 &  0.0000 \\
-        20 & 2.2767 & 2.2767 &  0.0000 \\
-        25 & 2.5112 & 2.5112 &  0.0000 \\
-        30 & 2.7408 & 2.7408 &  0.0000 \\
-        35 & 2.9627 & 2.9627 &  0.0000 \\
-        40 & 3.1667 & 3.1666 &  0.0001 \\
-        45 & 3.3610 & 3.3455 &  0.0155 \\
-        50 & 3.5369 & 3.3965 &  0.1404 \\
-        \bottomrule
+    \caption{Mediciones obtenidas mediante Arduino utilizando los parámetros
+    nominales del sensor.}
+    \begin{tabular}{|l|c|c|}
+        \hline
+         & \textbf{Temperatura} & \textbf{Resistencia} \\ \hline
+        Ambiente & \SI{21.6}{\celsius} & \SI{12164}{\ohm} \\ \hline
+        Frio & \SI{3.2}{\celsius} & \SI{29203}{\ohm} \\ \hline
+        Caliente & \SI{71}{\celsius} & \SI{1701}{\ohm} \\ \hline
     \end{tabular}
-    \label{tab:vin_vout}
+    \label{tab:mediciones_arduino_nominal}
 \end{table}
 
 \end{document}
