@@ -155,6 +155,8 @@ se determinó mediante la termocupla conectada al multímetro, colocando simult�
 el termistor en el mismo medio. Una vez estabilizada la medición de temperatura, se
 midió la resistencia del termistor con el multímetro.
 
+\vspace{0.3cm}
+
 De esta forma se obtuvieron tres pares resistencia--temperatura, correspondientes a
 \SI{20}{\celsius} y \SI{8.12}{\kilo\ohm} para temperatura ambiente,
 \SI{1}{\celsius} y \SI{17}{\kilo\ohm} para agua con hielo, y
@@ -169,6 +171,7 @@ a una entrada analógica del Arduino, según el circuito mostrado en la
 Figura~\ref{fig:circuito_arduino}. Mediante su conversor analógico--digital (ADC),
 la tensión medida fue procesada por software para obtener la resistencia del
 termistor y estimar su temperatura.
+\vspace{0.3cm}
 
 Inicialmente se utilizaron los parámetros nominales indicados en la hoja de datos
 del sensor. Se repitieron las tres condiciones anteriores: temperatura ambiente,
@@ -193,21 +196,37 @@ Tabla~\ref{tab:mediciones_arduino_nominal} del Anexo.
 \subsection{Medición mediante Arduino con parámetros propios}
 Utilizando los valores experimentales obtenidos con el termistor, se utilizó la página web de Rusefi para la resolución de la ecuación de Steinhart-Hart, con los valores de temperatura y resistencia anotados.
 A pesar de que, idealmente, el valor más bajo medido debería ser de 0 grados Celsius y el valor más alto de aproximadamente 50 grados Celsius, se emplearon los valores medidos para resolver la cuenta.
-\\
+\vspace{0.3cm}
+
 Los parámetros obtenidos y los nominales y los resultados para temperatura y resistencia obtenidos con el módulo Arduino se pueden ver las Tablas \ref{tab:constantes_steinhart_hart} y \ref{tab:mediciones_arduino_experimental} del anexo, respectivamente.
-\\
+\vspace{0.3cm}
+
 Resulta evidente al observar las constantes teóricas y las obtenidas y compararlas que A y C son positivas en un caso, y negativas en el otro, dando indicios de un posible problema en la obtención de estos. Sin embargo, sólo se puede asegurar que hubo un error al realizar nuevamente las mediciones de temperatura y resistencia.
 Finalmente, se observa una diferencia considerable con las mediciones previas de temperatura, pues en este caso se obtuvieron valores imposibles. Por otro lado, las resistencias resultan coherentes. Esto es porque los valores no son calculados mediante la ecuación de Steinhart-Hart, haciendo que no se vean afectados.
 Esto se puede deber a errores en las temperaturas usadas (es decir, no haber llegado a las temperaturas máxima y mínima óptimas para la obtención de las constantes) o, más probablemente, a errores de medición.
 
-
-
-
-
 \section{Conclusiones}
 
-La caracterización experimental confirmó el comportamiento de coeficiente de temperatura negativo propio del termistor NTC ---resistencia decreciente y no lineal con la temperatura, consistente con el modelo exponencial $R(T) = R_0 \cdot \exp\left[B\left(1/T - 1/T_0\right)\right]$ y con los parámetros nominales de la familia de sensores empleada ($R_{25} = 10\,\mathrm{k}\Omega$, $B_{25/50} \approx 3950\,\mathrm{K}$)---, pero la comparación contra la medición digital con Arduino evidenció un desajuste sistemático que crece con la distancia al punto de calibración del sensor ($T_0 = 25\,^{\circ}\mathrm{C}$): el error fue mínimo en la condición ambiente y máximo en la condición caliente ($\approx 7\,^{\circ}\mathrm{C}$, la más alejada de $T_0$), con discrepancias de resistencia de hasta un $70\%$ respecto de la referencia directa. Estimaciones de orden de magnitud permiten descartar la resolución del ADC y el autocalentamiento del sensor como causas relevantes, ya que ambos efectos resultan uno o dos órdenes de magnitud menores a los errores observados; el origen dominante del desvío debe atribuirse, por lo tanto, al uso de parámetros nominales de hoja de datos ($B$ y coeficientes de Steinhart-Hart genéricos) en lugar de coeficientes ajustados a la curva característica real de la unidad ensayada. Esto tiene una lectura directa desde la instrumentación biomédica: un error de varios grados Celsius es inaceptable para una medición clínica de temperatura corporal, donde se exige típicamente una exactitud de $\pm 0{,}1$-$0{,}2\,^{\circ}\mathrm{C}$, por lo que los parámetros nominales del fabricante solo son válidos como primera aproximación y todo sensor NTC destinado a uso clínico requiere calibración individual ---ajustando los tres coeficientes de Steinhart-Hart con pares resistencia-temperatura medidos sobre la propia unidad, como los relevados en este trabajo--- antes de su puesta en servicio. En conjunto, el ensayo validó el principio de funcionamiento del termistor y la viabilidad de su lectura mediante un divisor resistivo y el ADC del microcontrolador, mostrando que la exactitud final del sistema está gobernada por la calidad de la calibración del modelo resistencia-temperatura y no por la resolución de la etapa de adquisición digital.
-% Sintetizar los resultados principales, contrastarlos con la teoría y,
+La caracterización experimental confirmó el comportamiento físico propio del termistor NTC, evidenciando una relación resistencia--temperatura decreciente y marcadamente no lineal, coherente con el modelo exponencial de la familia ensayada ($R_{25} = 10\text{ k}\Omega$). Asimismo, se validó la factibilidad del arreglo de divisor resistivo y la adquisición mediante el conversor analógico--digital (ADC) del microcontrolador como método simple y de bajo costo para la digitalización de la variable.
+
+\vspace{0.3cm}
+
+Al implementar la lectura con los parámetros nominales del fabricante, se observó un desajuste sistemático que creció con la distancia al punto de calibración ($25^\circ\text{C}$), alcanzando un error de hasta $\approx 7^\circ\text{C}$ en la condición de agua caliente. Estimaciones de orden de magnitud permiten descartar la resolución del ADC y el autocalentamiento del sensor como causas dominantes de esta discrepancia (ambos efectos resultan órdenes de magnitud menores). Por ende, el error se atribuye al desvío intrínseco de las constantes nominales de catálogo respecto de la curva real del componente.
+
+\vspace{0.3cm}
+
+En el ámbito de la instrumentación biomédica, errores de varios grados Celsius son inaceptables para la monitorización de temperatura corporal (donde se exige exactitud clínica). Teóricamente, esto impone la necesidad de calibrar individualmente cada unidad mediante el ajuste empírico de los tres coeficientes de Steinhart-Hart ($A$, $B$ y $C$) a partir de pares $R$--$T$ relevados antes de su puesta en servicio.
+
+\vspace{0.3cm}
+
+No obstante, la determinación de dichos parámetros empíricos derivó en valores anómalos, con los signos de las constantes $A$ y $C$ invertidos respecto de los teóricos. Este comportamiento se debió a un error experimental en la medición del punto caliente registrada en la Tabla~\ref{tab:mediciones_ntc}, donde se anotó una resistencia de \SI{6.2}{\kilo\ohm} para \SI{78}{\celsius}. Para este sensor NTC, una resistencia de \SI{6.2}{\kilo\ohm} corresponde en realidad a unos \SI{38}{\celsius}, mientras que a \SI{78}{\celsius} el valor físico real debió situarse cercano a \SI{1.7}{\kilo\ohm} (como el propio Arduino registró luego en la Tabla~\ref{tab:mediciones_arduino_nominal}). No se conoce donde se produjo el error durante las mediciones. Por su parte, al forzar al sistema matricial de Steinhart-Hart a ajustar puntos contradictorios con la física del semiconductor, el modelo matemático distorsionó la curvatura polinómica, invirtiendo los signos de las constantes y provocando que las lecturas en Arduino divergieran por completo.
+
+\vspace{0.3cm}
+
+La distorsión del modelo resultó ser total, tal como se ilustra en la Figura~\ref{fig:divergencia_temperaturas}. La discrepancia fue de tal magnitud que resultó sumamente complejo definir una escala gráfica que permitiera comparar con claridad las mediciones: mientras las temperaturas reales y las obtenidas con parámetros nominales oscilaban en el rango biológico y experimental acotado de 0 a \SI{80}{\celsius}, las estimaciones del modelo empírico distorsionado se dispersaron violentamente entre \SI{-901.4}{\celsius} y \SI{146.6}{\celsius}. Esto evidencia de forma gráfica el colapso numérico del algoritmo ante datos de calibración térmicamente incongruentes.
+\vspace{0.3cm}
+
+En conclusión, el trabajo práctico demostró que la exactitud final del sistema no está limitada por el conversor analógico--digital ni por la topología del Circuito, sino por la extrema sensibilidad del modelo de Steinhart-Hart frente a la precisión y rigurosidad metodológica con la que se efectúa la calibración individual del transductor.
 % cuando corresponda, relacionarlos con aplicaciones en bioingeniería.
 
 % =============================================================================
@@ -217,21 +236,25 @@ La caracterización experimental confirmó el comportamiento de coeficiente de t
 % =============================================================================
 %
 
-\begin{thebibliography}{9}
 
-\end{thebibliography}
 
 % =============================================================================
 % ANEXO
 % No se contabiliza dentro de las 2--4 carillas del cuerpo principal.
 % =============================================================================
 %
-
 \newpage
 \appendix
 \section{Anexo}
 
 \subsection{Mediciones de temperatura y resistencia}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{curva_thermistor.png}
+    \caption{Curva característica típica provista por la hoja de datos del fabricante para el termistor NTC ($10\text{ k}\Omega\text{ a }25^\circ\text{C}$).}
+    \label{fig:curva_datasheet}
+\end{figure}
 
 \begin{table}[H]
     \centering
@@ -250,15 +273,14 @@ La caracterización experimental confirmó el comportamiento de coeficiente de t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.70\textwidth]{CircuitoArduino.png}
+    \includegraphics[width=0.88\textwidth]{CircuitoArduino.png}
     \caption{Circuito utilizado para la adquisición de la señal del termistor mediante Arduino.}
     \label{fig:circuito_arduino}
 \end{figure}
 
 \begin{table}[H]
     \centering
-    \caption{Mediciones obtenidas mediante Arduino utilizando los parámetros
-    nominales del sensor.}
+    \caption{Mediciones obtenidas mediante Arduino utilizando los parámetros nominales del sensor.}
     \begin{tabular}{|l|c|c|}
         \hline
          & \textbf{Temperatura} & \textbf{Resistencia} \\ \hline
@@ -269,7 +291,7 @@ La caracterización experimental confirmó el comportamiento de coeficiente de t
     \label{tab:mediciones_arduino_nominal}
 \end{table}
 
-\subsection{Comparación entre parámetros norminales y experimentales del termistor}
+\subsection{Comparación entre parámetros nominales y experimentales del termistor}
 
 \begin{table}[H]
     \centering
@@ -277,16 +299,19 @@ La caracterización experimental confirmó el comportamiento de coeficiente de t
     \begin{tabular}{|c|c|c|}
         \hline
         \textbf{Constante} & \textbf{Valor nominal} & \textbf{Valor experimental} \\ \hline
-        
         $A$ & $1.129148\times10^{-3}$ & $-1.043532\times10^{-1}$ \\ \hline
-        
         $B$ & $2.34125\times10^{-4}$ & $1.714248\times10^{-2}$ \\ \hline
-        
         $C$ & $8.76741\times10^{-8}$ & $-6.381518\times10^{-5}$ \\ \hline
-        
     \end{tabular}
     \label{tab:constantes_steinhart_hart}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figura_1_curva.png}
+    \caption{Curva característica teórica nominal ($B = 3950\text{ K}$) y distribución de los puntos relevados en el rango físico operativo.}
+    \label{fig:curva_operativa}
+\end{figure}
 
 \subsection{Resultados de la medición con parámetros experimentales}
 
@@ -296,17 +321,19 @@ La caracterización experimental confirmó el comportamiento de coeficiente de t
     \begin{tabular}{|l|c|c|}
         \hline
          & \textbf{Temperatura} & \textbf{Resistencia} \\ \hline
-
         Ambiente & \SI{-7.1}{\celsius} & \SI{11694}{\ohm} \\ \hline
-
         Frio & \SI{146.6}{\celsius} & \SI{30610}{\ohm} \\ \hline
-
         Caliente & \SI{-901.4}{\celsius} & \SI{2171}{\ohm} \\ \hline
-
     \end{tabular}
     \label{tab:mediciones_arduino_experimental}
 \end{table}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figura_2_curva.png}
+    \caption{Comparación de temperaturas obtenidas frente al patrón, evidenciando la divergencia originada por los coeficientes empíricos calculados.}
+    \label{fig:divergencia_temperaturas}
+\end{figure}
 
 
 \end{document}
